@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const db = require('../helpers/dbRegHelpers.js');
+const db = require('../helpers/dbHelpers.js');
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
