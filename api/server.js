@@ -26,7 +26,7 @@ server.get('/', (req, res) => {
 });
 
 const authRouter = require('./routes/authRouter.js');
-server.use('/api/auth', authRouter);
+server.use('/api', authRouter);
 
 /***************************************************************************************************
  ********************************************* export(s) *******************************************
