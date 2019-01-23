@@ -28,8 +28,23 @@ function generateToken(user) {
 }
 
 /***************************************************************************************************
- ********************************************** routes *********************************************
+ ********************************************* Endpoints *******************************************
  **************************************************************************************************/
+router.post('/register', (req, res) => {
+  // Precondition - Username must be unique (not used in database)
+  const newUserCreds = req.body;
+
+  // Creates a hash password to store in the database...
+  newUserCreds.password = bcrypt.hashSync(newUserCreds.password, db.settings.pwdHashLength);
+
+  // Adds a single user to the database
+  db.addUser(newUserCreds)
+    .then(Ids => {
+      res.status(201).json({ id: Ids[0] }); // returns the userId created by the database
+    })
+    .catch(err => res.status(500).send(err));
+})
+
 router.post('/login', (req, res) => {
   // Check username exist AND client password matches hash password in db
   const userCreds = req.body;
