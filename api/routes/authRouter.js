@@ -15,21 +15,66 @@ function generateToken(user) {
   const payload = {
     username: user.username,
     name: user.name,
-    roles: ['admins', 'accountants', 'human resources'] // should come from the database user.roles
+    department: user.department // should come from the database user.department
   }
 
   const secret = process.env.JWT_SECRET; // bad practice because of env, it can be hackable
 
   const options = {
-    expiresIn: 1000 * 20 // 20 seconds... otherValues(1000, '2 days', '10h', '7d')
+    expiresIn: 60 // 15 seconds... otherValues(20, '2 days', '10h', '7d'), a number represents seconds (not milliseconds)
   };
 
   return jwt.sign(payload, secret, options);
 }
 
+function authenticate(req, res, next) {
+  // the auth token is normally sent in the authorization header
+  const token = req.headers.authorization;
+
+  if (token) {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+      if (err) {
+        res.status(401).json({ message: 'invalid token' });
+      } else {
+        req.decodedToken = decodedToken;
+        next();
+      }
+    })
+  } else {
+    res.status(401).json({ message: 'no token provided' });
+  }
+}
+
+function authorizeDepartments(departments) {
+  return function (req, res, next) {
+    if (departments.includes(req.decodedToken.department)) {
+      next();
+    } else {
+      res.status(403).json({ message: `Access Denied: You must be in one of the following departments [${departments}]` })
+    }
+  }
+}
+
 /***************************************************************************************************
  ********************************************* Endpoints *******************************************
  **************************************************************************************************/
+// protect this endpoint so only admin users can see it
+router.get('/users', authenticate, authorizeDepartments([db.settings.departments[0]]), (req, res) => {
+  db.getAllUsers('users')
+    .select('id', 'username', 'department')
+    .then(users => res.status(200).json({ users, decodedToken: req.decodedToken }))
+    .catch(err => res.status(500).json({ error: err }));
+});
+
+// protect this endpoint so only admin and accountant users can see it
+router.get('/accountants/users', authenticate, authorizeDepartments([db.settings.departments[0], db.settings.departments[1]]), (req, res) => {
+  db.getAllUsers('users')
+    .select('username')
+    .where({ department: db.settings.departments[1] }) // accountants department users only
+    .then(users => res.status(200).json({ users, decodedToken: req.decodedToken }))
+    .catch(err => res.status(500).json({ error: err }));
+});
+
 router.post('/register', (req, res) => {
   // Precondition - Username must be unique (not used in database)
   const newUserCreds = req.body;

@@ -12,32 +12,32 @@ exports.seed = function (knex, Promise) {
         {
           username: 'JamesP',
           password: bcrypt.hashSync('pass123', db.settings.pwdHashLength),
-          department: 'admins'
+          department: db.settings.departments[0] // admins
         },
         {
           username: 'JohnK',
           password: bcrypt.hashSync('Password123', db.settings.pwdHashLength),
-          department: 'accountants'
+          department: db.settings.departments[1] // accountants
         },
         {
           username: 'CrystalH',
           password: bcrypt.hashSync('Pswd^$haha', db.settings.pwdHashLength),
-          department: 'accountants'
+          department: db.settings.departments[1] // accountants
         },
         {
           username: 'MikeL',
           password: bcrypt.hashSync('ImWorkingHere', db.settings.pwdHashLength),
-          department: 'human resources'
+          department: db.settings.departments[2] // human resources
         },
         {
           username: 'SharolL',
           password: bcrypt.hashSync('ImWorkingHere', db.settings.pwdHashLength),
-          department: 'human resources'
+          department: db.settings.departments[2] // human resources
         },
         {
           username: 'BryanS',
           password: bcrypt.hashSync('IcleanStuff', db.settings.pwdHashLength),
-          department: 'janitors'
+          department: db.settings.departments[3] // janitors
         }
       ]);
     });
