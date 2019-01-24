@@ -12,6 +12,6 @@ module.exports = {
   },
   settings: {
     pwdHashLength: 14, // 14 is a good baseline for time complexity when comparing password/hash for login
-    departments: ['admins', 'accountants', 'human resources', 'janitors'] // multiple dependancies, do not change order of values
+    departments: ['admins', 'accountants', 'human resources', 'janitors'] // multiple dependancies, can change value of names... just not order of values
   }
 };

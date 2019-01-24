@@ -21,7 +21,7 @@ function generateToken(user) {
   const secret = process.env.JWT_SECRET; // bad practice because of env, it can be hackable
 
   const options = {
-    expiresIn: 60 // 15 seconds... otherValues(20, '2 days', '10h', '7d'), a number represents seconds (not milliseconds)
+    expiresIn: 60 // 60 seconds... otherValues(20, '2 days', '10h', '7d'), a number represents seconds (not milliseconds)
   };
 
   return jwt.sign(payload, secret, options);
