@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, NavLink } from 'react-router-dom';
+import { Route, NavLink, withRouter } from 'react-router-dom';
 import Users from './users/Users';
 import Signin from './auth/Signin';
 import Signup from './auth/Signup';
@@ -30,7 +30,8 @@ class App extends Component {
 
   signout = () => {
     localStorage.removeItem('jwt');
+    this.props.history.push('/signin');
   };
 }
 
-export default App;
+export default withRouter(App);

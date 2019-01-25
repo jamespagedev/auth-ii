@@ -50,6 +50,7 @@ class Signin extends React.Component {
       .post(endpoint, this.state)
       .then(res => {
         localStorage.setItem('jwt', res.data.token);
+        this.props.history.push('/users');
       })
       .catch(err => console.err(err));
   };
